@@ -11,14 +11,12 @@
         </button>
       </center>
     </main>
-
     <section class="list__event">
       <center>
         <h3 class="div__title">
           Join the most exciting discussion and meetups in your neigbourhood.
         </h3>
       </center>
-
       <div class="search__box">
         <input
           v-model="searchEvent"
@@ -27,22 +25,25 @@
           class="search__input"
         />
       </div>
-
       <div class="event__list">
         <div
           class="event__content"
           v-for="event in resultQuery"
           :key="event.id"
+          @click="showModal(event)"
         >
           <div class="event__image">
             <!-- <img src="../assets/img/event-image.png" /> -->
             <img
               :src="event.images[0].url"
               :alt="event.name"
-              style="width: 265px; height: 160px;"
+              style="width: 265px; height: 160px; border-radius: 4px;"
             />
           </div>
-          <p>{{ event.name }}</p>
+
+          <p>
+            {{ event.name }}
+          </p>
           <span>{{
             event.dates.start.dateTime | moment("dddd, MMMM Do YYYY, h:mm:ss a")
           }}</span>
@@ -51,33 +52,38 @@
             <button>Available</button>
           </div>
         </div>
+        <modal
+          v-show="isModalVisible"
+          @close="closeModal"
+          :eventDetails="modalData"
+        />
       </div>
       <div style="text-align: center">
         <button class="load__more">See more Events</button>
       </div>
     </section>
-
-    <section class="blank__div">
-      <!-- <button class="load__more">Load more</button> -->
-    </section>
+    <section class="blank__div"></section>
   </div>
 </template>
-
 <script>
+import modal from "../components/modal.vue";
 import axios from "axios";
 export default {
-  name: "mainContent",
+  name: "index",
+  components: {
+    modal,
+  },
   data() {
     return {
       events: [],
       searchEvent: null,
+      modalData: {},
+      isModalVisible: false,
     };
   },
-
   mounted() {
     this.fetchEvents();
   },
-
   computed: {
     resultQuery() {
       // console.log(this.searchEvent);
@@ -91,12 +97,18 @@ export default {
       }
     },
   },
-
   methods: {
+    showModal(data) {
+      // console.log("MOdal DATa", data);
+      this.modalData = data;
+      this.isModalVisible = true;
+    },
+    closeModal() {
+      this.isModalVisible = false;
+    },
     getMax(array) {
       return array.priceRanges && array.priceRanges.length;
     },
-
     fetchEvents() {
       axios
         .get(
@@ -110,29 +122,25 @@ export default {
           console.log(error);
         });
     },
-
     truncateString(str, num) {
       if (!str) {
         return false;
       }
-
       if (str.length <= num) {
         return str;
       }
-
       return str.slice(0, num) + "...";
     },
   },
 };
 </script>
-
 <style scoped>
 /* .list__event {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-} */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    } */
 .event__list {
   display: flex;
   flex-wrap: wrap;
@@ -143,15 +151,12 @@ export default {
   margin-left: 10%;
   justify-content: space-evenly;
 }
-
 .event__image {
   margin-bottom: 50px;
 }
-
 .event__content {
   margin-bottom: 30px;
 }
-
 .event__content p {
   font-family: FLW-Regular;
   font-style: normal;
@@ -160,7 +165,6 @@ export default {
   line-height: 17px;
   color: #828282;
 }
-
 .event__content span {
   font-family: FLW-Regular;
   font-style: normal;
@@ -169,12 +173,10 @@ export default {
   line-height: 15px;
   color: #828282;
 }
-
 .sub__event__content {
   display: flex;
   justify-content: space-between;
 }
-
 .sub__event__content span {
   font-family: FLW-Regular;
   font-style: normal;
@@ -183,7 +185,6 @@ export default {
   line-height: 15px;
   color: #f5a623;
 }
-
 .sub__event__content button {
   font-family: FLW-Regular;
   font-style: normal;
@@ -196,7 +197,6 @@ export default {
   border: none;
   border-radius: 1px;
 }
-
 .sold button {
   font-family: FLW-Regular;
   font-style: normal;
@@ -209,7 +209,6 @@ export default {
   border: none;
   border-radius: 1px;
 }
-
 .free button {
   font-family: FLW-Regular;
   font-style: normal;
@@ -222,13 +221,11 @@ export default {
   border: none;
   border-radius: 1px;
 }
-
 .search__box {
   display: flex;
   justify-content: center;
   margin-top: 50px;
 }
-
 .search__input {
   height: 40px;
   width: 530px;
@@ -255,14 +252,12 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
-
 .wrapper div {
   border: 2px solid #ffa94d;
   background-color: #ffd8a8;
   padding: 5em;
   color: #d9480f;
 }
-
 .home__cover {
   background-image: url("../assets/img/cover.png");
   background-size: cover;
@@ -270,7 +265,6 @@ export default {
   width: 100vw;
   height: 100vh;
 }
-
 .home__cover h1 {
   display: flex;
   justify-content: center;
@@ -285,7 +279,6 @@ export default {
   margin-top: 300p;
   width: 45%;
 }
-
 .home__cover p {
   font-family: FLW-Regular;
   font-style: normal;
@@ -296,7 +289,6 @@ export default {
   color: #ffffff;
   width: 35%;
 }
-
 .get__started {
   width: 351px;
   height: 40px;
@@ -310,7 +302,6 @@ export default {
   margin-top: 35px;
   line-height: 26px;
 }
-
 .div__title {
   font-family: FLW-Regular;
   font-style: normal;
@@ -322,7 +313,6 @@ export default {
   width: 38%;
   padding-top: 85px;
 }
-
 .load__more {
   /* margin: 0 auto; */
   width: 351px;
@@ -337,7 +327,6 @@ export default {
   margin-top: 35px;
   line-height: 26px;
 }
-
 .blank__div {
   margin-top: 50px;
   height: 185px;

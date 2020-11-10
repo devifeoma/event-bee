@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <transition name="slide-fade">
+    <!-- <transition name="slide-fade"> -->
       <!-- <index></index> -->
       <!-- <login></login> -->
       <!-- <register></register> -->
       <!-- <reset-password></reset-password> -->
       <router-view />
-    </transition>
+    <!-- </transition> -->
   </div>
 </template>
 
